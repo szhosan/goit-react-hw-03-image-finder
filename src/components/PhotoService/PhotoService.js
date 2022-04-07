@@ -25,7 +25,6 @@ export default class PhotoApiService {
 
     try {
       const response = await instance.get();
-      this.incrementPage();
       this.totalHits = response.data.totalHits;
       return response;
     } catch (error) {
@@ -54,7 +53,7 @@ export default class PhotoApiService {
   }
 
   areAllRequestedPhotosShown() {
-    if ((this.page - 1) * this.PHOTOS_PER_PAGE > this.totalHits) {
+    if (this.page * this.PHOTOS_PER_PAGE > this.totalHits) {
       return true;
     } else return false;
   }

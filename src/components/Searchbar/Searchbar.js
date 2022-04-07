@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import s from './Searchbar.module.css';
 
 class Searchbar extends Component {
-  constructor() {
-    super();
-  }
-
   state = {
     searchQuery: '',
   };
