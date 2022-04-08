@@ -4,8 +4,9 @@ import PhotoApiService from '../PhotoService/PhotoService';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from 'components/Button/Button';
 import Modal from '../Modal/Modal';
-import { Grid } from 'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
 import { Events, animateScroll as scroll } from 'react-scroll';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const Status = {
   IDLE: 'idle',
@@ -62,11 +63,11 @@ class ImageGallery extends Component {
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
-    console.log('Toggle modal');
   };
 
   setGalleryItemsData({ data }, nextPageLoading) {
     if (data.totalHits === 0) {
+      this.setState({ status: Status.REJECTED });
       return;
     }
     const result = data.hits.map(
@@ -111,27 +112,20 @@ class ImageGallery extends Component {
   };
 
   setModalImageURL = () => {
-    console.log('Imageurl');
     if (this.setModalImageURL) {
-      const galletyItem = this.state.galleryItems.find(
+      const galleryItem = this.state.galleryItems.find(
         item => item.id === this.state.modalImageID
       );
-      return galletyItem;
+      return galleryItem;
     }
   };
 
   render() {
+    const { status, showModal, galleryItems, canLoadMore } = this.state;
     return (
       <>
-        {this.state.showModal && (
-          <Modal
-            imageURL={this.setModalImageURL().largeImageURL}
-            imageAlt={this.setModalImageURL().tags}
-            onClose={this.toggleModal}
-          />
-        )}
         <ul className={s.ImageGallery}>
-          {this.state.galleryItems.map(({ id, webformatURL, tags }) => {
+          {galleryItems.map(({ id, webformatURL, tags }) => {
             return (
               <ImageGalleryItem
                 key={id}
@@ -143,12 +137,25 @@ class ImageGallery extends Component {
             );
           })}
         </ul>
+
+        {status === Status.REJECTED &&
+          Notify.warning(
+            `There is no photos on your search query: ${this.props.searchQuery}`
+          )}
+        {showModal && (
+          <Modal
+            imageURL={this.setModalImageURL().largeImageURL}
+            imageAlt={this.setModalImageURL().tags}
+            onClose={this.toggleModal}
+          />
+        )}
+
         <div className={s.footerContainer}>
-          {this.state.canLoadMore && this.state.status !== Status.PENDING && (
+          {canLoadMore && status !== Status.PENDING && (
             <Button onClick={this.setNextPage} />
           )}
-          {this.state.status === Status.PENDING && (
-            <Grid color="#3f51b5" ariaLabel="loading" height={80} width={80} />
+          {status === Status.PENDING && (
+            <ThreeDots color="#3f51b5" ariaLabel="loading" />
           )}
         </div>
       </>
