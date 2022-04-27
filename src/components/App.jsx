@@ -9,6 +9,7 @@ import {
   fetchPhotos,
   PHOTOS_PER_PAGE,
 } from '../utils/PhotoService/PhotoService';
+import Notification from './Notification/Notification';
 
 const Status = {
   IDLE: 'idle',
@@ -18,10 +19,6 @@ const Status = {
 };
 
 class App extends Component {
-  constructor() {
-    const requestedPhotosAmount = 0;
-    super();
-  }
   state = {
     searchQuery: '',
     page: 1,
@@ -36,6 +33,9 @@ class App extends Component {
     const { page, searchQuery } = this.state;
     const newQuery = prevState.searchQuery !== searchQuery;
     const nextPageLoad = prevState.page !== page;
+    if (newQuery) {
+      this.setState({ galleryItems: [], canLoadMore: false });
+    }
     if (newQuery || nextPageLoad) {
       this.setState({ status: Status.PENDING });
       const data = await fetchPhotos(searchQuery, page);
@@ -107,17 +107,14 @@ class App extends Component {
   };
 
   render() {
-    const {
-      galleryItems,
-      showModal,
-      modalImageId,
-      canLoadMore,
-      status,
-      searchQuery,
-    } = this.state;
+    const { galleryItems, showModal, modalImageId, canLoadMore, status } =
+      this.state;
     return (
       <>
         <SearchBar onSubmit={this.handleSubmit} />
+        {status === Status.IDLE && (
+          <Notification message="Input your search query to the field above" />
+        )}
         {galleryItems && (
           <ImageGallery
             galleryItems={galleryItems}
