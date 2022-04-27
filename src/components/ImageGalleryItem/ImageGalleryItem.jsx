@@ -16,7 +16,7 @@ export default function ImageGalleryItem({
 }
 
 ImageGalleryItem.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   webformatURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
   onItemClick: PropTypes.func.isRequired,

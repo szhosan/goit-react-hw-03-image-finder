@@ -41,5 +41,5 @@ export default class Modal extends Component {
 Modal.propTypes = {
   imageURL: PropTypes.string.isRequired,
   imageAlt: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
