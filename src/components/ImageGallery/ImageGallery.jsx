@@ -60,6 +60,7 @@ ImageGallery.propTypes = {
       tags: PropTypes.string.isRequired,
     })
   ),
+  onGalleryItemClick: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;
