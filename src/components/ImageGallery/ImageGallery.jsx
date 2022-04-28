@@ -15,7 +15,7 @@ class ImageGallery extends Component {
     });
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.galleryItems.length !== this.props.galleryItems.length) {
       scroll.scrollToBottom();
     }
