@@ -109,6 +109,7 @@ class App extends Component {
   render() {
     const { galleryItems, showModal, modalImageId, canLoadMore, status } =
       this.state;
+    const modalImageItem = this.setModalImageURL(modalImageId);
     return (
       <>
         <SearchBar onSubmit={this.handleSubmit} />
@@ -123,8 +124,8 @@ class App extends Component {
         )}
         {showModal && (
           <Modal
-            imageURL={this.setModalImageURL(modalImageId).largeImageURL}
-            imageAlt={this.setModalImageURL(modalImageId).tags}
+            imageURL={modalImageItem.largeImageURL}
+            imageAlt={modalImageItem.tags}
             onClose={this.toggleModal}
           />
         )}
